@@ -2,7 +2,7 @@ from django import forms
 
 from .models import User
 
-class SigninForm(forms.ModelForm):
+class SignupForm(forms.ModelForm):
     error_messages = [
         {'password_mismatch': "The two password fields didn't match."}
     ]
@@ -26,7 +26,7 @@ class SigninForm(forms.ModelForm):
         return password_confirm
 
     def save(self, commit=True):
-        user = super(SigninForm, self).save(commit=False)
+        user = super(SignupForm, self).save(commit=False)
         user.set_password(self.cleaned_data['password'])
         if commit:
             user.save()
