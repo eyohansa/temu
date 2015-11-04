@@ -1,5 +1,8 @@
 from django.conf.urls import url
 
-urlpatterns = [
+from .views import IndexView, SignupView
 
+urlpatterns = [
+    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^signup/$', SignupView.as_view(), name='signup')
 ]
