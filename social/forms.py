@@ -1,6 +1,7 @@
 from django import forms
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import User
+from .models import TemuUser
 
 class SignupForm(forms.ModelForm):
     error_messages = [
@@ -12,7 +13,7 @@ class SignupForm(forms.ModelForm):
                                        widget=forms.PasswordInput)
 
     class Meta:
-        model = User
+        model = TemuUser
         fields = ("username", "display_name")
 
     def clean_password_confirm(self):
@@ -31,3 +32,14 @@ class SignupForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class UserUpdateForm(forms.ModelForm):
+    password = ReadOnlyPasswordHashField()
+
+    class Meta:
+        model = TemuUser
+        fields = ('username', 'password', 'is_active', 'is_superuser')
+
+    def clean_password(self):
+        return self.initial['password']
