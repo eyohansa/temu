@@ -1,18 +1,24 @@
+from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 
 
 # Create your models here.
-class User(models.Model):
+class User(AbstractBaseUser):
     username = models.CharField(max_length=20)
     display_name = models.CharField(max_length=30)
-    password = models.TextField()
     join_date = models.DateField('date joined')
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
+
+    def get_full_name(self):
+        return self.display_name
+
+    def get_short_name(self):
+        return self.display_name
 
     def __str__(self):
         return self.display_name
-
-    def set_password(self, new_password):
-        self.password = new_password
 
 
 class Post(models.Model):
