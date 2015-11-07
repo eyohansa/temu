@@ -1,15 +1,18 @@
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
+import datetime
 
 
 # Create your models here.
-class User(AbstractBaseUser):
-    username = models.CharField(max_length=20)
-    display_name = models.CharField(max_length=30)
-    join_date = models.DateField('date joined')
-
+class TemuUser(AbstractBaseUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
+
+    username = models.CharField(max_length=20, unique=True)
+    display_name = models.CharField(max_length=30)
+    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
+    join_date = models.DateField('date joined')
 
     def get_full_name(self):
         return self.display_name
@@ -21,8 +24,30 @@ class User(AbstractBaseUser):
         return self.display_name
 
 
+class TemuUserManager(BaseUserManager):
+    def create_user(self, username, password):
+        new_user = self.model(
+            username = username,
+            join_date = datetime.date.today()
+        )
+        new_user.set_password(password)
+        new_user.save(using=self._db)
+        return new_user
+
+    def create_superuser(self, username, password):
+        new_superuser = self.model(
+            username = username,
+            is_active = True,
+            is_superuser = True,
+            join_date = datetime.date.today()
+        )
+        new_superuser.set_password(password)
+        new_superuser.save(using=self._db)
+        return new_superuser
+
+
 class Post(models.Model):
-    author = models.ForeignKey(User)
+    author = models.ForeignKey(TemuUser)
     post_text = models.CharField(max_length=500)
     post_time = models.DateTimeField('time posted')
 
