@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Temu - {{ user.username }}</title>
+</head>
+<body>
+    {% if posts %}
+        <div>
+            {% for post in posts %}
+            <div>
+                {{ post.post_text }}
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</body>
+</html>
