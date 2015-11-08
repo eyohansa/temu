@@ -2,9 +2,10 @@ from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, TemplateView, FormView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
+from django.core.urlresolvers import reverse_lazy
 
 from .forms import SignupForm
-from .models import TemuUser
+from .models import TemuUser, Post
 
 import datetime
 
@@ -34,6 +35,12 @@ class SigninView(FormView):
         else:
             return self.form_invalid(form)
 
+    def get_success_url(self):
+        success_url = self.request.POST.get('username', None)
+        if success_url:
+            return '%s' % (success_url)
+        else:
+            return reverse_lazy('index')
 
 class SignupView(CreateView):
     template_name = 'signup.html'
@@ -47,3 +54,17 @@ class SignupView(CreateView):
         user.save()
 
         return HttpResponseRedirect('/')
+
+
+class UserView(TemplateView):
+    template_name = 'user.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserView, self).get_context_data(**kwargs)
+        context['posts'] = self.get_posts(self.request.user)
+        return context
+
+    def get_posts(self, user):
+        return Post.objects.filter(
+            author=user
+        )
