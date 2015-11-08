@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.views.generic import TemplateView, FormView
+from django.contrib.auth.forms import AuthenticationForm
 
 from .forms import SignupForm
 
@@ -13,13 +14,13 @@ class IndexView(TemplateView):
         return context
 
 
-# class SigninView(FormView):
-#     template_name = 'signin.html'
-#     form_class = SignupForm
-#     success_url = "/success/"
+class SigninView(FormView):
+    template_name = 'signin.html'
+    form_class = AuthenticationForm
+    success_url = "/"
 
 
 class SignupView(FormView):
     template_name = 'signup.html'
     form_class = SignupForm
-    success_url = "/success/"
+    success_url = "/"

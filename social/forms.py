@@ -3,6 +3,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from .models import TemuUser
 
+
 class SignupForm(forms.ModelForm):
     error_messages = [
         {'password_mismatch': "The two password fields didn't match."}
