@@ -5,21 +5,21 @@ import datetime
 
 # Create your models here.
 class TemuUserManager(BaseUserManager):
-    def create_user(self, username, password):
+    def create_user(self, username, join_date, password):
         new_user = self.model(
             username = username,
-            join_date = datetime.date.today()
+            join_date = join_date
         )
         new_user.set_password(password)
         new_user.save(using=self._db)
         return new_user
 
-    def create_superuser(self, username, password):
+    def create_superuser(self, username, join_date, password):
         new_superuser = self.model(
             username = username,
             is_active = True,
             is_superuser = True,
-            join_date = datetime.date.today()
+            join_date = join_date
         )
         new_superuser.set_password(password)
         new_superuser.save(using=self._db)
