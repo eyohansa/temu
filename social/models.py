@@ -50,7 +50,7 @@ class TemuUser(AbstractBaseUser):
 
 class Post(models.Model):
     author = models.ForeignKey(TemuUser)
-    post_text = models.CharField(max_length=500)
+    post_text = models.TextField(max_length=500)
     post_time = models.DateTimeField('time posted')
 
     def __str__(self):

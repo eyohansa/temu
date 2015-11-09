@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import TemuUser
+from .models import TemuUser, Post
 
 
 class SignupForm(forms.ModelForm):
@@ -15,7 +15,7 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = TemuUser
-        fields = ("username", "display_name")
+        fields = ("username",)
 
     def clean_password_confirm(self):
         password = self.cleaned_data.get('password')
@@ -44,3 +44,19 @@ class UserUpdateForm(forms.ModelForm):
 
     def clean_password(self):
         return self.initial['password']
+
+
+class PostCreationForm(forms.ModelForm):
+    post_text = forms.CharField(widget=forms.Textarea({'rows': 2, 'placeholder': 'What\'s on your mind?'}))
+
+    class Meta:
+        model = Post
+        fields = ()
+
+    def save(self, commit=True):
+        post = super(PostCreationForm, self).save(commit=False)
+        post.post_text = self.cleaned_data['post_text']
+
+        if commit:
+            post.save()
+        return post
