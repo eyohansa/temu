@@ -32,6 +32,7 @@ class TemuUser(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     join_date = models.DateField('date joined')
+    friends = models.ManyToManyField('self', blank=True, null=True)
 
     objects = TemuUserManager()
 
@@ -46,6 +47,13 @@ class TemuUser(AbstractBaseUser):
 
     def __str__(self):
         return self.display_name
+
+
+class FriendRequest(models.Model):
+    sender = models.ForeignKey(TemuUser)
+    receiver = models.ForeignKey(TemuUser)
+    answer = models.BooleanField(default=False)
+    request_date = models.DateField('date requested')
 
 
 class Post(models.Model):
