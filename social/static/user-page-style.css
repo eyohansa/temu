@@ -26,13 +26,18 @@ body {
 }
 
 .post {
-    border-radius: 4px;
+    background: whitesmoke;
+
+    border-radius: 16px;
     border: 1px solid black;
     margin: 16px 0px;
+
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
 }
 
 .post-header {
-    background-color: whitesmoke;
     padding: 8px;
 }
 
@@ -45,5 +50,10 @@ body {
 }
 
 .post-text {
+    padding: 8px;
+    background: white;
+}
+
+.post-footer {
     padding: 8px;
 }

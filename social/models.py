@@ -52,6 +52,7 @@ class Post(models.Model):
     author = models.ForeignKey(TemuUser)
     post_text = models.TextField(max_length=500)
     post_time = models.DateTimeField('time posted')
+    commendation = models.PositiveIntegerField('like', default=0)
 
     def __str__(self):
         return self.post_text

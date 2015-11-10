@@ -1,18 +1,58 @@
+{% load staticfiles %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Temu - {{ user.username }}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'user-page-style.css' %}" />
 </head>
 <body>
-    {% if posts %}
-        <div>
-            {% for post in posts %}
-            <div>
-                {{ post.post_text }}
-            </div>
-            {% endfor %}
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="{%  static 'user-page.js' %}"></script>
+    <div id="navbar">
+        <a href="/signout/">Sign out</a>
+    </div>
+
+    <div id="container">
+        <div id="profile">
+            {{ user.display_name }}
         </div>
-    {% endif %}
+
+        <div id="wall">
+        <div>
+            <form action='.' method="post">{%  csrf_token %}
+                {{ form }}
+                <input type="submit" value="Post" />
+            </form>
+        </div>
+
+        {% if posts %}
+            <div>
+                {% for post in posts %}
+                <div class="post">
+                    <div class="post-header">
+                    <span class="post-header-author">
+                    {% if user.username == post.author.username %}
+                        You
+                    {% else %}
+                        {{ post.author.display_name }}
+                    {% endif %}
+                    </span>
+                    <span class="post-header-timestamp">
+                        {{ post.post_time }}
+                    </span>
+                    </div>
+                    <div class="post-text">{{ post.post_text }}</div>
+                    <div class="post-footer">
+                        {{ post.commendation }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        </div>
+
+    </div>
 </body>
 </html>

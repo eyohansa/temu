@@ -3,7 +3,7 @@ from django.views.generic import CreateView, TemplateView, FormView, RedirectVie
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 
 from .forms import SignupForm, PostCreationForm
