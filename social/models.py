@@ -50,14 +50,14 @@ class TemuUser(AbstractBaseUser):
 
 
 class FriendRequest(models.Model):
-    sender = models.ForeignKey(TemuUser)
-    receiver = models.ForeignKey(TemuUser)
+    sender = models.ForeignKey(TemuUser, on_delete=models.CASCADE)
+    receiver = models.ForeignKey(TemuUser, on_delete=models.CASCADE)
     answer = models.BooleanField(default=False)
     request_date = models.DateField('date requested')
 
 
 class Post(models.Model):
-    author = models.ForeignKey(TemuUser)
+    author = models.ForeignKey(TemuUser, on_delete=models.CASCADE)
     post_text = models.TextField(max_length=500)
     post_time = models.DateTimeField('time posted')
     commendation = models.PositiveIntegerField('like', default=0)
