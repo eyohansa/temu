@@ -1,0 +1,34 @@
+<div>
+    <form>{% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Search" />
+    </form>
+
+    {% if candidate_list %}
+        <div id="candidate-list">
+        {% for candidate in candidate_list %}
+            <div>
+            {{ candidate }} <button class="friend-add-button">Add</button>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if request_list %}
+        <div>
+        {% for friend_request in request_list %}
+            <div>
+            {{ friend_request.sender.display_name }} <button class="friend-accept-button">Accept</button>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if friend_list %}
+        <div id="friend-list">
+        {% for friend in friend_list %}
+            {{ friend.display_name }}
+        {% endfor %}
+        </div>
+    {% endif %}
+</div>
