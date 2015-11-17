@@ -1,5 +1,6 @@
 from django.conf.urls import url
 
+from . import views
 from .views import IndexView, SignupView, SigninView, SignoutView, UserView
 
 urlpatterns = [
@@ -7,5 +8,6 @@ urlpatterns = [
     url(r'^signup/$', SignupView.as_view(), name='signup'),
     url(r'^signin/$', SigninView.as_view(), name='signin'),
     url(r'^signout/$', SignoutView.as_view(), name='signout'),
-    url(r'^(?P<username>\w+)/$', UserView.as_view())
+    url(r'^(?P<username>\w+)/$', UserView.as_view()),
+    url(r'^(?P<username>\w+)/people', views.PeopleView.as_view(), name='people')
 ]

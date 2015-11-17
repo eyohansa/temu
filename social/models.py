@@ -32,7 +32,7 @@ class TemuUser(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     join_date = models.DateField('date joined')
-    friends = models.ManyToManyField('self', blank=True, null=True)
+    friends = models.ManyToManyField('self', blank=True)
 
     objects = TemuUserManager()
 
@@ -50,8 +50,8 @@ class TemuUser(AbstractBaseUser):
 
 
 class FriendRequest(models.Model):
-    sender = models.ForeignKey(TemuUser, on_delete=models.CASCADE)
-    receiver = models.ForeignKey(TemuUser, on_delete=models.CASCADE)
+    requester = models.ForeignKey(TemuUser, related_name='befriender', on_delete=models.CASCADE)
+    requested = models.ForeignKey(TemuUser, related_name='befriendee', on_delete=models.CASCADE)
     answer = models.BooleanField(default=False)
     request_date = models.DateField('date requested')
 

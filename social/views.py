@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.generic import CreateView, TemplateView, FormView, RedirectView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -7,9 +7,15 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 
 from .forms import SignupForm, PostCreationForm
-from .models import TemuUser, Post
+from .models import TemuUser, Post, FriendRequest
 
 import datetime
+
+
+def get_user(request):
+    return TemuUser.objects.filter(
+        username = request.user.username
+    )
 
 
 class IndexView(TemplateView):
@@ -20,7 +26,7 @@ class IndexView(TemplateView):
             url = '/' + self.request.user.username + '/'
             return HttpResponseRedirect(url)
         else:
-            response =  super(IndexView, self).get(request, *args, **kwargs)
+            response = super(IndexView, self).get(request, *args, **kwargs)
             return response
 
     def get_context_data(self, **kwargs):
@@ -69,6 +75,7 @@ class SignupView(CreateView):
 
 
 class SignoutView(RedirectView):
+    permanent = False
     url = '/'
 
     def get(self, request, *args, **kwargs):
@@ -107,3 +114,64 @@ class UserView(FormView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(self.__class__, self).dispatch(request, *args, **kwargs)
+
+
+class AjaxableResponseMixin(object):
+    def form_invalid(self, form):
+        response = super(AjaxableResponseMixin, self).form_invalid(form)
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, status=400)
+        else:
+            return response
+
+    def form_valid(self, form):
+        response = super(AjaxableResponseMixin, self).form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                'pk': self.object.pk,
+                'success': 'You\'ve sent a friend request to ' + self.request.POST.get('requested_user')
+            }
+            return JsonResponse(data)
+        else:
+            return response
+
+
+class PeopleView(TemplateView):
+    template_name = 'people.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PeopleView, self).get_context_data(**kwargs)
+        context['request_list'] = FriendRequest.objects.filter(
+            requested=get_user(self.request),
+            answer=False
+        )
+        context['friend_list'] = FriendRequest.objects.filter(
+
+        )
+
+    def get_friend_list(self):
+        return FriendRequest.objects.filter(
+
+        )
+
+def add_friend(request, user_id):
+    p = get_object_or_404(TemuUser, pk=user_id)
+    friend_request = FriendRequest.objects.create(
+        sender=request.user,
+        receiver=p,
+        answer=False,
+        request_date=datetime.date.today()
+    )
+    friend_request.save()
+    return render(request, 'people.html')
+
+def accept_friend(request, friend_request_id):
+    p = get_object_or_404(FriendRequest, friend_request_id)
+    p.answer = True
+    p.save()
+
+    user = get_user(request)
+    user.friends.add(p)
+    user.save()
+
+    return HttpResponseRedirect('/')

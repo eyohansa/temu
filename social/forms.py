@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import TemuUser, Post
+from .models import TemuUser, Post, FriendRequest
 
 
 class SignupForm(forms.ModelForm):
@@ -60,3 +60,27 @@ class PostCreationForm(forms.ModelForm):
         if commit:
             post.save()
         return post
+
+class FriendRequestForm(forms.ModelForm):
+    class Meta:
+        model = FriendRequest
+        fields = ()
+
+    def save(self, commit=True):
+        friend_request = super(FriendRequestForm, self).save(commit=False)
+        friend_request.sender = self.cleaned_data['sender']
+        friend_request.receiver = self.cleaned_data['receiver']
+
+        if commit:
+            friend_request.save()
+        return friend_request
+
+
+class FriendRequestResponseForm(forms.ModelForm):
+    class Meta:
+        model = TemuUser
+        fields = ()
+
+    def save(self, commit=True):
+        f_req_response = super(FriendRequestResponseForm, self).save(commit=False)
+
