@@ -1,5 +1,6 @@
-from django.http import JsonResponse, HttpResponseRedirect
-from django.views.generic import CreateView, TemplateView, FormView, RedirectView
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.template import RequestContext
+from django.views.generic import CreateView, TemplateView, FormView, RedirectView, DetailView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -116,6 +117,14 @@ class UserView(FormView):
         return super(self.__class__, self).dispatch(request, *args, **kwargs)
 
 
+class PostView(DetailView):
+    model = Post
+
+    def get_context_data(self, **kwargs):
+        context = super(PostView, self).get_context_data(**kwargs)
+        return context;
+
+
 class AjaxableResponseMixin(object):
     def form_invalid(self, form):
         response = super(AjaxableResponseMixin, self).form_invalid(form)
@@ -154,6 +163,7 @@ class PeopleView(TemplateView):
 
         )
 
+
 def add_friend(request, user_id):
     p = get_object_or_404(TemuUser, pk=user_id)
     friend_request = FriendRequest.objects.create(
@@ -165,13 +175,20 @@ def add_friend(request, user_id):
     friend_request.save()
     return render(request, 'people.html')
 
-def accept_friend(request, friend_request_id):
-    p = get_object_or_404(FriendRequest, friend_request_id)
-    p.answer = True
-    p.save()
 
-    user = get_user(request)
-    user.friends.add(p)
-    user.save()
+@login_required
+def commend(request):
+    context = RequestContext(request)
+    post_id = None
+    if request.method == 'GET':
+        post_id = request.GET['post_id']
 
-    return HttpResponseRedirect('/')
+    commendations = 0
+    if post_id:
+        post = Post.objects.get(id=int(post_id))
+        if post:
+            commendations = post.commendation + 1
+            post.commendation = commendations
+            post.save()
+
+    return HttpResponse(commendations)

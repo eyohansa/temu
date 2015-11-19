@@ -47,7 +47,7 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class PostCreationForm(forms.ModelForm):
-    post_text = forms.CharField(widget=forms.Textarea({'rows': 2, 'placeholder': 'What\'s on your mind?'}))
+    post_text = forms.CharField(widget=forms.Textarea({'rows': 1, 'placeholder': 'What\'s on your mind?'}))
 
     class Meta:
         model = Post
@@ -60,6 +60,7 @@ class PostCreationForm(forms.ModelForm):
         if commit:
             post.save()
         return post
+
 
 class FriendRequestForm(forms.ModelForm):
     class Meta:

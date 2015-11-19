@@ -1,25 +1,9 @@
 $(document).ready(function() {
-    $('#profile').onmousedown(function() {
-        $('#profile').hide('slow');
+    $('.commends').click(function() {
+        var postId = $(this).attr("data-postid");
+        $.get('/commend/', {post_id: postId}, function(data) {
+            $('#' + postId +'-commendations').html(data);
+            $('#' + postId +'-commends').hide();
+        });
     })
-
-    $('#send_friend_request').click(request_friend())
 });
-
-function request_friend() {
-    $.ajax({
-        url: 'friend/',
-        type: 'POST',
-        data: {
-            requested_user: $('#intended_username').val()
-        },
-
-        success: function(json) {
-
-        },
-
-        error: function(xhr, message, err) {
-            alert(message);
-        }
-    });
-};
