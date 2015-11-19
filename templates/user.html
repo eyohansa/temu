@@ -16,7 +16,13 @@
 
     <div id="container">
         <div id="profile">
+            <div>
             {{ user.display_name }}
+            </div>
+
+            <div>
+
+            </div>
         </div>
 
         <div id="wall">
@@ -32,20 +38,21 @@
                 {% for post in posts %}
                 <div class="post">
                     <div class="post-header">
-                    <span class="post-header-author">
-                    {% if user.username == post.author.username %}
-                        You
-                    {% else %}
-                        {{ post.author.display_name }}
-                    {% endif %}
-                    </span>
-                    <span class="post-header-timestamp">
-                        {{ post.post_time }}
-                    </span>
+                        <span class="post-header-author">
+                        {% if user.username == post.author.username %}
+                            You
+                        {% else %}
+                            {{ post.author.display_name }}
+                        {% endif %}
+                        </span>
+                        <span class="post-header-timestamp">
+                            {{ post.post_time }}
+                        </span>
                     </div>
                     <div class="post-text">{{ post.post_text }}</div>
                     <div class="post-footer">
-                        {{ post.commendation }}
+                        <span id="{{ post.id }}-commendations" class="commendations">{{ post.commendation }}</span>
+                        <span id="{{ post.id }}-commends" class="commends" data-postid="{{ post.id }}">Commend</span>
                     </div>
                 </div>
                 {% endfor %}

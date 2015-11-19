@@ -4,16 +4,6 @@
         <input type="submit" value="Search" />
     </form>
 
-    {% if candidate_list %}
-        <div id="candidate-list">
-        {% for candidate in candidate_list %}
-            <div>
-            {{ candidate }} <button class="friend-add-button">Add</button>
-            </div>
-        {% endfor %}
-        </div>
-    {% endif %}
-
     {% if request_list %}
         <div>
         {% for friend_request in request_list %}
