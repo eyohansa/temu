@@ -32,7 +32,6 @@ class TemuUser(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     join_date = models.DateField('date joined')
-    friends = models.ManyToManyField('self', blank=True)
 
     objects = TemuUserManager()
 
@@ -49,6 +48,14 @@ class TemuUser(AbstractBaseUser):
         return self.display_name
 
 
+class Relationship(models.Model):
+    user = models.ForeignKey(TemuUser)
+    friends = models.ManyToManyField(TemuUser, related_name="friends")
+    requested = models.ManyToManyField(TemuUser, related_name="requested")
+    requesting = models.ManyToManyField(TemuUser, related_name="requesting")
+    blocked = models.ManyToManyField(TemuUser, related_name="blocked")
+
+
 class FriendRequest(models.Model):
     requester = models.ForeignKey(TemuUser, related_name='befriender', on_delete=models.CASCADE)
     requested = models.ForeignKey(TemuUser, related_name='befriendee', on_delete=models.CASCADE)
@@ -60,7 +67,15 @@ class Post(models.Model):
     author = models.ForeignKey(TemuUser, on_delete=models.CASCADE)
     post_text = models.TextField(max_length=500)
     post_time = models.DateTimeField('time posted')
-    commendation = models.PositiveIntegerField('like', default=0)
+    commendations = models.ManyToManyField(TemuUser, related_name="commender")
 
     def __str__(self):
         return self.post_text
+
+
+class Comment(Post):
+    post = models.ForeignKey(Post, related_name="parent")
+
+    def __str__(self):
+        return super(Comment, self).post_text
+

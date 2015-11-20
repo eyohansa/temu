@@ -9,7 +9,6 @@ from django.utils.decorators import method_decorator
 
 from .forms import SignupForm, PostCreationForm
 from .models import TemuUser, Post, FriendRequest
-
 import datetime
 
 
@@ -187,8 +186,11 @@ def commend(request):
     if post_id:
         post = Post.objects.get(id=int(post_id))
         if post:
-            commendations = post.commendation + 1
-            post.commendation = commendations
-            post.save()
+            user = get_user(request)
+            if user not in post.commendations.all():
+                post.commendations.add(request.user)
+                post.save()
+
+            commendations = post.commendations.count()
 
     return HttpResponse(commendations)

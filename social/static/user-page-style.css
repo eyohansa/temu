@@ -23,6 +23,7 @@ body {
 #wall {
     float: left;
     padding: 16px;
+    width:70%;
 }
 
 .post {
@@ -56,4 +57,8 @@ body {
 
 .post-footer {
     padding: 8px;
+}
+
+.commendations {
+    float: right;
 }
