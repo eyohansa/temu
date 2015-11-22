@@ -1,0 +1,16 @@
+language: python
+
+python:
+  - "3.5"
+
+env:
+  - DJANGO=1.8
+
+install:
+  - pip install -q DJANGO==$DJANGO --use-mirrors
+
+before_script:
+  - "pep8 --exclude=migrations --ignore=E501,E225 src"
+
+script:
+  - python manage.py syncdb --noinput
