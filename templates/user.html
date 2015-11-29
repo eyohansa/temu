@@ -14,7 +14,7 @@
             {{ user.display_name }}
             </div>
 
-            {% if user.username == request.user.username %}
+            {% if user.username != request.user.username %}
                 <button data-userid="{{ user.id }}">Add</button>
             {% endif %}
         </div>
