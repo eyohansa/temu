@@ -7,7 +7,7 @@ env:
   - DJANGO=1.8
 
 install:
-  - pip install -q DJANGO==$DJANGO --use-mirrors
+  - pip install django==$DJANGO --use-mirrors
 
 script:
   - python manage.py syncdb --noinput
