@@ -1,15 +1,9 @@
-{% load staticfiles %}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Temu - {{ user.username }}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'user-page-style.css' %}" />
-</head>
-<body>
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="{%  static 'user-page.js' %}"></script>
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block content %}
+
     <div id="navbar">
         <a href="/signout/">Sign out</a>
     </div>
@@ -20,9 +14,9 @@
             {{ user.display_name }}
             </div>
 
-            <div>
-
-            </div>
+            {% if user.username == request.user.username %}
+                <button data-userid="{{ user.id }}">Add</button>
+            {% endif %}
         </div>
 
         <div id="wall">
@@ -66,6 +60,9 @@
                             </span>
                         {% endif %}
                     </div>
+                    <div>
+
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -73,5 +70,4 @@
         </div>
 
     </div>
-</body>
-</html>
+{% endblock %}

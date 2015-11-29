@@ -1,0 +1,15 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Temu{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'user-page-style.css' %}" />
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="{%  static 'user-page.js' %}"></script>
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+</body>
