@@ -10,4 +10,5 @@ install:
   - pip install django==$DJANGO
 
 script:
-  - python manage.py syncdb --noinput
+  - python manage.py makemigrations
+  - python manage.py migrate
