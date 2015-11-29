@@ -9,8 +9,5 @@ env:
 install:
   - pip install -q DJANGO==$DJANGO --use-mirrors
 
-before_script:
-  - "pep8 --exclude=migrations --ignore=E501,E225 src"
-
 script:
   - python manage.py syncdb --noinput
