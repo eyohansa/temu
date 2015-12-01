@@ -18,6 +18,12 @@ def get_user(request):
     )
 
 
+def get_user_by_username(username):
+    return TemuUser.objects.filter(
+        username = username
+    ).first()
+
+
 class IndexView(TemplateView):
     template_name = "index.html"
 
@@ -98,7 +104,10 @@ class UserView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(UserView, self).get_context_data(**kwargs)
-        context['posts'] = self.get_posts(self.request.user)
+        username = self.kwargs['username']
+        user = get_user_by_username(username)
+        context['page_user'] = user
+        context['posts'] = self.get_posts(user)
         return context
 
     def get_posts(self, user):

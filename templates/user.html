@@ -11,62 +11,65 @@
     <div id="container">
         <div id="profile">
             <div>
-            {{ user.display_name }}
+            {{ page_user.display_name }}
             </div>
 
-            {% if user.username != request.user.username %}
+            {% if page_user != user %}
                 <button data-userid="{{ user.id }}">Add</button>
             {% endif %}
         </div>
 
+
         <div id="wall">
-        <div>
-            <form method="post">{%  csrf_token %}
-                {{ form }}
-                <br /><input type="submit" value="Post" />
-            </form>
-        </div>
-
-        {% if posts %}
+            {% if page_user == user %}
             <div>
-                {% for post in posts %}
-                <div class="post">
-                    <div class="post-header">
-                        <span class="post-header-author">
-                        {% if user.username == post.author.username %}
-                            You
-                        {% else %}
-                            {{ post.author.display_name }}
-                        {% endif %}
-                        </span>
-                        <span class="post-header-timestamp">
-                            {{ post.post_time }}
-                        </span>
-                    </div>
-                    <div class="post-text">{{ post.post_text }}</div>
-                    <div class="post-footer">
-                        <span id="{{ post.id }}-commendations" class="commendations">
-                            {{ post.commendations.count }}
-                            {% if post.commendations.count > 1%}
-                                users likes
-                            {% else %}
-                                user like
-                            {% endif %}
-                            this post.
-                        </span>
-                        {%  if not request.user in post.commendations.all %}
-                            <span id="{{ post.id }}-commends" class="commends" data-postid="{{ post.id }}">
-                                Commend
-                            </span>
-                        {% endif %}
-                    </div>
-                    <div>
-
-                    </div>
-                </div>
-                {% endfor %}
+                <form method="post">{%  csrf_token %}
+                    {{ form }}
+                    <br /><input type="submit" value="Post" />
+                </form>
             </div>
-        {% endif %}
+            {% endif %}
+
+            {% if posts %}
+                <div>
+                    {% for post in posts %}
+                    <div class="post">
+                        <div class="post-header">
+                            <span class="post-header-author">
+                            {% if user.username == post.author.username %}
+                                You
+                            {% else %}
+                                {{ post.author.display_name }}
+                            {% endif %}
+                            </span>
+                            <span class="post-header-timestamp">
+                                {{ post.post_time }}
+                            </span>
+                        </div>
+                        <div class="post-text">{{ post.post_text }}</div>
+                        <div class="post-footer">
+                            <span id="{{ post.id }}-commendations" class="commendations">
+                                {{ post.commendations.count }}
+                                {% if post.commendations.count > 1%}
+                                    users likes
+                                {% else %}
+                                    user like
+                                {% endif %}
+                                this post.
+                            </span>
+                            {%  if not user in post.commendations.all %}
+                                <span id="{{ post.id }}-commends" class="commends" data-postid="{{ post.id }}">
+                                    Commend
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
 
     </div>
