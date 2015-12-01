@@ -2,6 +2,7 @@ body {
     /* Make sure there's no hidden margin and padding. */
     margin: 0px;
     padding: 0px;
+    font-family: Helvetica;
 }
 
 #container {
@@ -28,14 +29,8 @@ body {
 
 .post {
     background: whitesmoke;
-
-    border-radius: 16px;
     border: 1px solid black;
     margin: 16px 0px;
-
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding;
-    background-clip: padding-box;
 }
 
 .post-header {
@@ -57,6 +52,7 @@ body {
 
 .post-footer {
     padding: 8px;
+    overflow: auto;
 }
 
 .commendations {

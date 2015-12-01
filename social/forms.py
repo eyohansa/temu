@@ -51,7 +51,7 @@ class PostCreationForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ()
+        fields = ('post_text',)
 
     def save(self, commit=True):
         post = super(PostCreationForm, self).save(commit=False)

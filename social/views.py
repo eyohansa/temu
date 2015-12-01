@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 
 from .forms import SignupForm, PostCreationForm
-from .models import TemuUser, Post, FriendRequest
+from .models import TemuUser, Post, FriendRequest, Relationship
 import datetime
 
 
@@ -106,11 +106,6 @@ class UserView(FormView):
             author=user
         ).order_by('-post_time')
 
-    def get_form(self, form_class=None):
-        form = super(UserView, self).get_form(self.form_class)
-        form.auto_id = False
-        return form
-
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(self.__class__, self).dispatch(request, *args, **kwargs)
@@ -153,13 +148,12 @@ class PeopleView(TemplateView):
             requested=get_user(self.request),
             answer=False
         )
-        context['friend_list'] = FriendRequest.objects.filter(
-
-        )
+        context['friend_list'] = self.get_friend_list()
+        return context;
 
     def get_friend_list(self):
-        return FriendRequest.objects.filter(
-
+        return Relationship.objects.filter(
+            user = self.request.user
         )
 
 
