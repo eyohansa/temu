@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
+{%  load staticfiles %}
+
 {% block title %}{{ user.username }}{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "user-page.js" %}"></script>
+{% endblock %}
 
 {% block content %}
 
@@ -48,23 +54,37 @@
                         </div>
                         <div class="post-text">{{ post.post_text }}</div>
                         <div class="post-footer">
-                            <span id="{{ post.id }}-commendations" class="commendations">
-                                {{ post.commendations.count }}
+                            <div id="{{ post.id }}-commendations" class="commendations">
+                                <span id="{{ post.id }}-commendation-count">{{ post.commendations.count }}</span>
                                 {% if post.commendations.count > 1%}
                                     users likes
                                 {% else %}
                                     user like
                                 {% endif %}
                                 this post.
-                            </span>
+                            </div>
                             {%  if not user in post.commendations.all %}
                                 <span id="{{ post.id }}-commends" class="commends" data-postid="{{ post.id }}">
                                     Commend
                                 </span>
                             {% endif %}
                         </div>
-                        <div>
-
+                        <div class="post-comments">
+                            <div id="{{ post.id }}-comment" class="comment-input">
+                                <input id="{{ post.id }}-comment-input" type="textarea" row="1"/>
+                                <input class="comment-submit" type="button" value="Post" data-postid="{{ post.id }}"/>
+                            </div>
+                            <div id="{{ post.id }}-comments">
+                                {% for comment in comments %}
+                                    {% if comment.post == post %}
+                                        <div>
+                                            <div class="comment-header">{{ comment.author }}</div>
+                                            <div class="comment-text">{{ comment.post_text }}</div>
+                                            <div class="comment-footer"></div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
