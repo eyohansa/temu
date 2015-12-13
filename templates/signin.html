@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ project_name }} - {{ page_name }}</title>
-</head>
-<body>
-    <form method="post">{% csrf_token %}
-        <table>
-            {{ form.as_table }}
-        </table>
-        <input type="submit" value="Confirm" />
-    </form>
-</body>
-</html>
+{% extends "index.html" %}
+
+{% block content %}
+    <div class="container">
+        <form method="post">{% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <input type="submit" value="Confirm" />
+        </form>
+    </div>
+{% endblock %}

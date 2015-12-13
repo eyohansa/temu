@@ -1,30 +1,8 @@
-body {
-    /* Make sure there's no hidden margin and padding. */
-    margin: 0px;
-    padding: 0px;
-    font-family: Helvetica;
-}
-
-#container {
-    padding: 8px;
-}
-
 #navbar {
     background-color: whitesmoke;
     width: 100%;
     text-align: right;
     padding: 8px 0px;
-}
-
-#profile {
-    float: left;
-    width: 300px;
-}
-
-#wall {
-    float: left;
-    padding: 16px;
-    width:70%;
 }
 
 .post {

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{%  load staticfiles %}
+{% load staticfiles %}
 
 {% block title %}{{ user.username }}{% endblock %}
 
@@ -8,89 +8,97 @@
     <script src="{% static "user-page.js" %}"></script>
 {% endblock %}
 
-{% block content %}
+{% block body %}
 
     <div id="navbar">
-        <a href="/signout/">Sign out</a>
+        {% block navbar %}
+            <a href="/signout/">Sign out</a>
+        {% endblock %}
     </div>
 
     <div id="container">
-        <div id="profile">
-            <div>
-            {{ page_user.display_name }}
-            </div>
-
-            {% if page_user != user %}
-                <button data-userid="{{ user.id }}">Add</button>
-            {% endif %}
-        </div>
-
-
-        <div id="wall">
-            {% if page_user == user %}
-            <div>
-                <form method="post">{%  csrf_token %}
-                    {{ form }}
-                    <br /><input type="submit" value="Post" />
-                </form>
-            </div>
-            {% endif %}
-
-            {% if posts %}
+        <div id="sidebar" class="col-md-2">
+            {% block sidebar %}
+            <div id="profile">
                 <div>
-                    {% for post in posts %}
-                    <div class="post">
-                        <div class="post-header">
-                            <span class="post-header-author">
-                            {% if user.username == post.author.username %}
-                                You
-                            {% else %}
-                                {{ post.author.display_name }}
-                            {% endif %}
-                            </span>
-                            <span class="post-header-timestamp">
-                                {{ post.post_time }}
-                            </span>
-                        </div>
-                        <div class="post-text">{{ post.post_text }}</div>
-                        <div class="post-footer">
-                            <div id="{{ post.id }}-commendations" class="commendations">
-                                <span id="{{ post.id }}-commendation-count">{{ post.commendations.count }}</span>
-                                {% if post.commendations.count > 1%}
-                                    users likes
-                                {% else %}
-                                    user like
-                                {% endif %}
-                                this post.
-                            </div>
-                            {%  if not user in post.commendations.all %}
-                                <span id="{{ post.id }}-commends" class="commends" data-postid="{{ post.id }}">
-                                    Commend
-                                </span>
-                            {% endif %}
-                        </div>
-                        <div class="post-comments">
-                            <div id="{{ post.id }}-comment" class="comment-input">
-                                <input id="{{ post.id }}-comment-input" type="textarea" row="1"/>
-                                <input class="comment-submit" type="button" value="Post" data-postid="{{ post.id }}"/>
-                            </div>
-                            <div id="{{ post.id }}-comments">
-                                {% for comment in comments %}
-                                    {% if comment.post == post %}
-                                        <div>
-                                            <div class="comment-header">{{ comment.author }}</div>
-                                            <div class="comment-text">{{ comment.post_text }}</div>
-                                            <div class="comment-footer"></div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
+                {{ page_user.display_name }}
                 </div>
-            {% endif %}
+
+                {% if page_user != user %}
+                    <button data-userid="{{ user.id }}">Add</button>
+                {% endif %}
+            </div>
+            {% endblock %}
         </div>
 
+        <div id="main" class="col-md-8">
+        {% block main %}
+            <div id="wall">
+                {% if page_user == user %}
+                <div>
+                    <form method="post">{%  csrf_token %}
+                        {{ form }}
+                        <br /><input type="submit" value="Post" />
+                    </form>
+                </div>
+                {% endif %}
+
+                {% if posts %}
+                    <div>
+                        {% for post in posts %}
+                        <div class="post">
+                            <div class="post-header">
+                                <span class="post-header-author">
+                                {% if user.username == post.author.username %}
+                                    You
+                                {% else %}
+                                    {{ post.author.display_name }}
+                                {% endif %}
+                                </span>
+                                <span class="post-header-timestamp">
+                                    {{ post.post_time }}
+                                </span>
+                            </div>
+                            <div class="post-text">{{ post.post_text }}</div>
+                            <div class="post-footer">
+                                <div id="{{ post.id }}-commendations" class="commendations">
+                                    <span id="{{ post.id }}-commendation-count">{{ post.commendations.count }}</span>
+                                    {% if post.commendations.count > 1%}
+                                        users likes
+                                    {% else %}
+                                        user like
+                                    {% endif %}
+                                    this post.
+                                </div>
+                                {%  if not user in post.commendations.all %}
+                                    <span id="{{ post.id }}-commends" class="commends" data-postid="{{ post.id }}">
+                                        Commend
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <div class="post-comments">
+                                <div id="{{ post.id }}-comment" class="comment-input">
+                                    <input id="{{ post.id }}-comment-input" type="textarea" row="1"/>
+                                    <input class="comment-submit" type="button" value="Post" data-postid="{{ post.id }}"/>
+                                </div>
+                                <div id="{{ post.id }}-comments">
+                                    {% for comment in comments %}
+                                        {% if comment.post == post %}
+                                            <div>
+                                                <div class="comment-header">{{ comment.author }}</div>
+                                                <div class="comment-text">{{ comment.post_text }}</div>
+                                                <div class="comment-footer"></div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            {% endblock %}
+        </div>
     </div>
 {% endblock %}

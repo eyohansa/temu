@@ -1,3 +1,6 @@
+{% extends user.html %}
+
+{% block main %}
 <div>
     <form>{% csrf_token %}
         {{ form }}
@@ -22,3 +25,4 @@
         </div>
     {% endif %}
 </div>
+{% endblock %}
