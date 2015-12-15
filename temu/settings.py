@@ -105,6 +105,6 @@ AUTH_USER_MODEL = 'social.TemuUser'
 
 STATIC_URL = '/static/'
 
-LOGIN_URL = '/signup/'
+LOGIN_URL = '/signin/'
 
 LOGOUT_URL = '/signout/'
