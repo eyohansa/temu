@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
-import datetime
 
 
 # Create your models here.
@@ -69,13 +68,14 @@ class Post(models.Model):
     post_time = models.DateTimeField('time posted')
     commendations = models.ManyToManyField(TemuUser, related_name="commender")
 
+
     def __str__(self):
         return self.post_text
 
 
 class Comment(Post):
-    post = models.ForeignKey(Post, related_name="parent")
+    post = models.ForeignKey(Post, related_name="parent", null=False)
 
     def __str__(self):
-        return super(Comment, self).post_text
+        return self.post_text
 

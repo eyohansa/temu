@@ -1,17 +1,14 @@
-#navbar {
-    background-color: whitesmoke;
-    width: 100%;
-    text-align: right;
-    padding: 8px 0px;
-}
-
-.post {
+.post, .comment {
     background: whitesmoke;
     border: 1px solid black;
     margin: 16px 0px;
 }
 
-.post-header {
+.post-comments {
+    margin: 16px;
+}
+
+.post-header, .comment-header {
     padding: 8px;
 }
 
@@ -19,16 +16,16 @@
 
 }
 
-.post-header-timestamp {
+.post-header-timestamp, .comment-header-timestamp {
     float: right;
 }
 
-.post-text {
+.post-text, .comment-text {
     padding: 8px;
     background: white;
 }
 
-.post-footer {
+.post-footer, .comment-footer {
     padding: 8px;
     overflow: auto;
 }

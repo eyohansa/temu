@@ -10,11 +10,16 @@
 
 {% block body %}
 
-    <div id="navbar">
-        {% block navbar %}
-            <a href="/signout/">Sign out</a>
-        {% endblock %}
-    </div>
+    <nav class="navbar navbar-default">
+        <div id="navbar" class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Temu</a>
+            </div>
+            {% block navbar %}
+            <li><a href="/signout/">Sign out</a></li>
+            {% endblock %}
+        </div>
+    </nav>
 
     <div id="container">
         <div id="sidebar" class="col-md-2">
@@ -25,7 +30,7 @@
                 </div>
 
                 {% if page_user != user %}
-                    <button data-userid="{{ user.id }}">Add</button>
+                    <button id="add-friend-button" data-userid="{{ page_user.id }}">Add</button>
                 {% endif %}
             </div>
             {% endblock %}
@@ -37,8 +42,8 @@
                 {% if page_user == user %}
                 <div>
                     <form method="post">{%  csrf_token %}
-                        {{ form }}
-                        <br /><input type="submit" value="Post" />
+                        {{ form.as_p }}
+                        <input type="submit" value="Post" />
                     </form>
                 </div>
                 {% endif %}
@@ -46,54 +51,101 @@
                 {% if posts %}
                     <div>
                         {% for post in posts %}
-                        <div class="post">
-                            <div class="post-header">
-                                <span class="post-header-author">
-                                {% if user.username == post.author.username %}
-                                    You
-                                {% else %}
-                                    {{ post.author.display_name }}
-                                {% endif %}
-                                </span>
-                                <span class="post-header-timestamp">
-                                    {{ post.post_time }}
-                                </span>
-                            </div>
-                            <div class="post-text">{{ post.post_text }}</div>
-                            <div class="post-footer">
-                                <div id="{{ post.id }}-commendations" class="commendations">
-                                    <span id="{{ post.id }}-commendation-count">{{ post.commendations.count }}</span>
-                                    {% if post.commendations.count > 1%}
-                                        users likes
+                            {% if post.parent  %}
+                            <div>
+                                <div class="post-header">
+                                    <span class="post-header-author">
+                                    {% if user.username == post.parent.author.username %}
+                                        You
                                     {% else %}
-                                        user like
+                                        {{ post.parent.author.display_name }}
                                     {% endif %}
-                                    this post.
-                                </div>
-                                {%  if not user in post.commendations.all %}
-                                    <span id="{{ post.id }}-commends" class="commends" data-postid="{{ post.id }}">
-                                        Commend
                                     </span>
-                                {% endif %}
-                            </div>
-                            <div class="post-comments">
-                                <div id="{{ post.id }}-comment" class="comment-input">
-                                    <input id="{{ post.id }}-comment-input" type="textarea" row="1"/>
-                                    <input class="comment-submit" type="button" value="Post" data-postid="{{ post.id }}"/>
+                                    <span class="post-header-timestamp">
+                                        {{ post.parent.post_time }}
+                                    </span>
                                 </div>
-                                <div id="{{ post.id }}-comments">
-                                    {% for comment in comments %}
-                                        {% if comment.post == post %}
-                                            <div>
-                                                <div class="comment-header">{{ comment.author }}</div>
-                                                <div class="comment-text">{{ comment.post_text }}</div>
-                                                <div class="comment-footer"></div>
-                                            </div>
+                                <div>{{ post.parent.post_text }}</div>
+                                <div>
+                            {% endif %}
+                                <div class="post">
+                                <div class="post-header">
+                                    <span class="post-header-author">
+                                    {% if user.username == post.author.username %}
+                                        You
+                                    {% else %}
+                                        {{ post.author.display_name }}
+                                    {% endif %}
+                                    </span>
+                                    <span class="post-header-timestamp">
+                                        {{ post.post_time }}
+                                    </span>
+                                </div>
+                                <div class="post-text">{{ post.post_text }}</div>
+                                <div class="post-footer">
+                                    <div id="{{ post.id }}-commendations" class="commendations">
+                                        <span id="{{ post.id }}-commendation-count">{{ post.commendations.count }}</span>
+                                        {% if post.commendations.count > 1%}
+                                            users likes
+                                        {% else %}
+                                            user like
                                         {% endif %}
-                                    {% endfor %}
+                                        this post.
+                                    </div>
+                                    {%  if not user in post.commendations.all %}
+                                        <span id="{{ post.id }}-commends" class="commends" data-postid="{{ post.id }}">
+                                            Commend
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <div class="post-comments">
+                                    <div id="{{ post.id }}-comment" class="comment-input container">
+                                        <input id="{{ post.id }}-comment-input" type="textarea" row="1"/> <br />
+                                        <input class="comment-submit" type="button" value="Post" data-postid="{{ post.id }}" data-csrftoken="{{ csrf_token }}"/>
+                                    </div>
+                                    <div id="{{ post.id }}-comments">
+                                        {% for comment in comments %}
+                                            {% if comment.post == post %}
+                                                <div class="comment">
+                                                    <div class="comment-header">
+                                                        <span class="comment-header-author">
+                                                        {% if user.username == comment.author.username %}
+                                                            You
+                                                        {% else %}
+                                                            {{ comment.author.display_name }}
+                                                        {% endif %}
+                                                        </span>
+                                                        <span class="comment-header-timestamp">
+                                                            {{ comment.post_time }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="comment-text">{{ comment.post_text }}</div>
+                                                    <div class="comment-footer">
+                                                        <div id="{{ comment.id }}-commendations" class="commendations">
+                                                            <span id="{{ comment.id }}-commendation-count">{{ comment.commendations.count }}</span>
+                                                            {% if comment.commendations.count > 1%}
+                                                                users likes
+                                                            {% else %}
+                                                                user like
+                                                            {% endif %}
+                                                            this post.
+                                                        </div>
+                                                        {%  if not user in comment.commendations.all %}
+                                                            <span id="{{ comment.id }}-commends" class="commends" data-postid="{{ comment.id }}">
+                                                                Commend
+                                                            </span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            {% if post.parent %}
+                                </div>
+                            </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 {% endif %}

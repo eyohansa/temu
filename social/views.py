@@ -8,19 +8,31 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 
 from .forms import SignupForm, PostCreationForm
-from .models import TemuUser, Post, FriendRequest, Relationship
+from .models import TemuUser, Post, FriendRequest, Relationship, Comment
 import datetime
 
 
 def get_user(request):
     return TemuUser.objects.filter(
-        username = request.user.username
+        username=request.user.username
     )
 
 
 def get_user_by_username(username):
-    return TemuUser.objects.filter(
-        username = username
+    return TemuUser.objects.filter(username=username).first()
+
+
+def get_posts(user):
+    return Post.objects.filter(author=user).order_by('-post_time')
+
+
+def get_comments(user):
+    return Comment.objects.filter(post__author=user)
+
+
+def get_post(id):
+    return Post.objects.filter(
+        id=id
     ).first()
 
 
@@ -107,13 +119,9 @@ class UserView(FormView):
         username = self.kwargs['username']
         user = get_user_by_username(username)
         context['page_user'] = user
-        context['posts'] = self.get_posts(user)
+        context['posts'] = get_posts(user)
+        context['comments'] = get_comments(user)
         return context
-
-    def get_posts(self, user):
-        return Post.objects.filter(
-            author=user
-        ).order_by('-post_time')
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -125,7 +133,7 @@ class PostView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PostView, self).get_context_data(**kwargs)
-        return context;
+        return context
 
 
 class AjaxableResponseMixin(object):
@@ -166,7 +174,8 @@ class PeopleView(TemplateView):
         )
 
 
-def add_friend(request, user_id):
+def add_friend(request):
+    user_id = request.kwargs['user_id']
     p = get_object_or_404(TemuUser, pk=user_id)
     friend_request = FriendRequest.objects.create(
         sender=request.user,
@@ -180,7 +189,6 @@ def add_friend(request, user_id):
 
 @login_required
 def commend(request):
-    context = RequestContext(request)
     post_id = None
     if request.method == 'GET':
         post_id = request.GET['post_id']
@@ -197,3 +205,25 @@ def commend(request):
             commendations = post.commendations.count()
 
     return HttpResponse(commendations)
+
+
+@login_required
+def comment(request):
+    comments = []
+    if request.method == 'POST':
+        post_id = request.POST['post_id']
+        comment_text = request.POST['comment_text']
+
+        if comment_text is not "":
+            post = get_post(post_id)
+
+            if post:
+                Comment.objects.create(
+                        post=post,
+                        author=request.user,
+                        post_text=comment_text,
+                        post_time=datetime.datetime.now()
+                )
+                comments = Comment.objects.filter(post=post)
+
+    return HttpResponse(comments)
