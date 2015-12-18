@@ -1,4 +1,4 @@
-{% extends user.html %}
+{% extends "user.html" %}
 
 {% block main %}
 <div>
@@ -7,8 +7,24 @@
         <input type="submit" value="Search" />
     </form>
 
+    {% if people %}
+        <div class="people">
+            <div class="container-fluid">
+                {% for person in people %}
+                    <div class="person" class="row vertical-align">
+                        <a href="{% url "social:user-page" person.username %}">{{ person.display_name }}</a>
+                        <button class="friend-add-button pull-right" aria-label="Send Friend Request">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+
     {% if request_list %}
-        <div>
+        <div class="container-fluid">
         {% for friend_request in request_list %}
             <div>
             {{ friend_request.sender.display_name }} <button class="friend-accept-button">Accept</button>
@@ -18,7 +34,7 @@
     {% endif %}
 
     {% if friend_list %}
-        <div id="friend-list">
+        <div id="friend-list" class="container-fluid">
         {% for friend in friend_list %}
             {{ friend.display_name }}
         {% endfor %}
