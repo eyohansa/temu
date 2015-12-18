@@ -36,15 +36,17 @@
     <div id="container">
         <div id="sidebar" class="col-md-2">
             {% block sidebar %}
-            <div id="profile">
-                <div>
-                {{ page_user.display_name }}
-                </div>
+                {% if page_user %}
+                    <div id="profile">
+                        <div>
+                        {{ page_user.display_name }}
+                        </div>
 
-                {% if page_user != user %}
-                    <button id="add-friend-button" data-userid="{{ page_user.id }}">Add</button>
+                        {% if page_user != user %}
+                            <button id="add-friend-button" data-userid="{{ page_user.id }}">Add</button>
+                        {% endif %}
+                    </div>
                 {% endif %}
-            </div>
             {% endblock %}
         </div>
 

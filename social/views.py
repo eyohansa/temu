@@ -15,7 +15,7 @@ import datetime
 def get_user(request):
     return TemuUser.objects.filter(
         username=request.user.username
-    )
+    ).first()
 
 
 def get_user_by_username(username):
@@ -161,6 +161,8 @@ class PeopleView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PeopleView, self).get_context_data(**kwargs)
+        context['page_user'] = get_user(self.request)
+        context['people'] = TemuUser.objects.exclude(username=self.request.user.username)
         context['request_list'] = FriendRequest.objects.filter(
             requested=get_user(self.request),
             answer=False
