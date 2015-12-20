@@ -48,7 +48,7 @@ class TemuUser(AbstractBaseUser):
 
 
 class Relationship(models.Model):
-    user = models.ForeignKey(TemuUser)
+    user = models.OneToOneField(TemuUser, primary_key=True, on_delete=models.CASCADE)
     friends = models.ManyToManyField(TemuUser, related_name="friends")
     requested = models.ManyToManyField(TemuUser, related_name="requested")
     requesting = models.ManyToManyField(TemuUser, related_name="requesting")
@@ -67,7 +67,6 @@ class Post(models.Model):
     post_text = models.TextField(max_length=500)
     post_time = models.DateTimeField('time posted')
     commendations = models.ManyToManyField(TemuUser, related_name="commender")
-
 
     def __str__(self):
         return self.post_text
