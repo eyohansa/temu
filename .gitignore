@@ -1,0 +1,7 @@
+*.pyc
+
+.idea
+
+*.sqlite3
+
+social/migrations
