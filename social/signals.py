@@ -10,10 +10,7 @@ logger = logging.getLogger(__name__)
 
 @receiver(post_save, sender=TemuUser, dispatch_uid="create_user_relationship")
 def user_relationship_handler(sender, instance, created, using, **kwargs):
-    logger.debug("Signal is received.")
+
     if created:
         r = Relationship(user=instance)
         r.save(using=using)
-        logger.debug('New relationship created')
-    else:
-        logger.debug('No new record.')
