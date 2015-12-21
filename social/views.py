@@ -27,8 +27,9 @@ def get_user_by_username(username):
     return TemuUser.objects.filter(username=username).first()
 
 
-def get_posts(user):
-    return Post.objects.filter(author=user).order_by('-post_time')
+def get_posts(request, username):
+    posts = Post.objects.filter(author__username=username).order_by('-post_time')
+    return [p for p in posts if not hasattr(p, 'comment')]
 
 
 def get_comments(user):
@@ -36,9 +37,7 @@ def get_comments(user):
 
 
 def get_post(id):
-    return Post.objects.filter(
-        id=id
-    ).first()
+    return Post.objects.get(id=id)
 
 
 class IndexView(TemplateView):
@@ -124,7 +123,7 @@ class UserView(FormView):
         username = self.kwargs['username']
         user = get_user_by_username(username)
         context['page_user'] = user
-        context['posts'] = get_posts(user)
+        context['posts'] = get_posts(self.request, user.username)
         context['comments'] = get_comments(user)
         return context
 
@@ -219,7 +218,6 @@ def comment(request):
 
         if comment_text is not "":
             post = get_post(post_id)
-
             if post:
                 Comment.objects.create(
                         post=post,
@@ -269,6 +267,7 @@ def refuse(request, username):
         friend_candidate = user.relationship.requested.filter(username=target_username).first()
         user.relationship.blocked.add(friend_candidate)
         user.relationship.requested.filter(username=target_username).delete()
+
 
 @login_required
 def cancel(request, username):
