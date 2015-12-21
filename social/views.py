@@ -9,7 +9,12 @@ from django.utils.decorators import method_decorator
 
 from .forms import SignupForm, PostCreationForm
 from .models import TemuUser, Post, FriendRequest, Relationship, Comment
+
 import datetime
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_user(request):
@@ -243,3 +248,35 @@ def block(request, username):
             result = {"result": "success"}
 
     return JsonResponse(result)
+
+
+@login_required
+def accept(request, username):
+    if request.method == 'POST':
+        target_username = request.POST['target_username']
+        user = get_user_by_username(username)
+        friend_candidate = user.relationship.requested.filter(username=target_username).first()
+        user.relationship.friends.add(friend_candidate)
+        friend_candidate.friends.add(user)
+
+        user.relationship.requested.filter(username=target_username).delete()
+        friend_candidate.requesting.filter(username=username).delete()
+    else:
+        logger.debug("No valid user to accept.")
+
+
+@login_required
+def refuse(request, username):
+    if request.method == 'POST':
+        target_username = request.POST['target_username']
+        user = get_user_by_username(username)
+        friend_candidate = user.relationship.requested.filter(username=target_username).first()
+        user.relationship.blocked.add(friend_candidate)
+        user.relationship.requested.filter(username=target_username).delete()
+
+@login_required
+def cancel(request, username):
+    if request.method == 'POST':
+        target_username = request.POST['target_username']
+        user = get_user_by_username(username)
+        user.relationship.requesting.filter(username=target_username).delete()
