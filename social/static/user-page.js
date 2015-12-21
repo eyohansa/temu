@@ -48,4 +48,26 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#block-button').click(function() {
+        var username = $(this).attr('data-username');
+        var csrfToken = $(this).attr("data-csrftoken");
+        var url = $(this).attr('data-url');
+
+        $.ajax(url, {
+            data: {
+                csrfmiddlewaretoken: csrfToken,
+                target_username: username
+            },
+            type: 'POST',
+            success: function(data) {
+                if(data['result'] == 'success') {
+                    console.log(username + " has been blocked.");
+                }
+            },
+            error: function(data) {
+                console.log(data);
+            }
+        })
+    });
 });

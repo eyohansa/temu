@@ -1,7 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import TemuUser, Post, FriendRequest
+from .models import TemuUser, Post, FriendRequest, Relationship
+
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class SignupForm(forms.ModelForm):
@@ -32,6 +37,7 @@ class SignupForm(forms.ModelForm):
         user.set_password(self.cleaned_data['password'])
         if commit:
             user.save()
+            logger.debug("New user is signed up!")
         return user
 
 

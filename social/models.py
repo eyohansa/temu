@@ -1,27 +1,34 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 
 # Create your models here.
 class TemuUserManager(BaseUserManager):
     def create_user(self, username, join_date, password):
         new_user = self.model(
-            username = username,
-            join_date = join_date
+            username=username,
+            join_date=join_date
         )
         new_user.set_password(password)
         new_user.save(using=self._db)
+        logger.info("New user is saved.")
         return new_user
 
     def create_superuser(self, username, join_date, password):
         new_superuser = self.model(
-            username = username,
-            is_active = True,
-            is_superuser = True,
-            join_date = join_date
+            username=username,
+            is_active=True,
+            is_superuser=True,
+            join_date=join_date
         )
         new_superuser.set_password(password)
         new_superuser.save(using=self._db)
+        logger.info("New superuser is saved.")
         return new_superuser
 
 

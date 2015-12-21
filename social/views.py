@@ -229,3 +229,17 @@ def comment(request):
                 comments = Comment.objects.filter(post=post)
 
     return HttpResponse(comments)
+
+
+@login_required
+def block(request, username):
+    result = {"result": "failed"}
+    if request.method == 'POST':
+        target_username = request.POST['target_username']
+        target = get_user_by_username(target_username)
+
+        if target:
+            get_user_by_username(username).relationship.blocked.add(target)
+            result = {"result": "success"}
+
+    return JsonResponse(result)
