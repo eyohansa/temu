@@ -181,17 +181,13 @@ class PeopleView(TemplateView):
         )
 
 
-def add_friend(request):
+@login_required
+def add_friend(request, username):
     user_id = request.kwargs['user_id']
     p = get_object_or_404(TemuUser, pk=user_id)
-    friend_request = FriendRequest.objects.create(
-        sender=request.user,
-        receiver=p,
-        answer=False,
-        request_date=datetime.date.today()
-    )
-    friend_request.save()
-    return render(request, 'people.html')
+    user = get_object_or_404(TemuUser, username=username)
+    user.relationship.requesting.add(p)
+    p.relationship.requested.add(user)
 
 
 @login_required
