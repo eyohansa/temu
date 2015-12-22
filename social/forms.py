@@ -53,7 +53,10 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class PostCreationForm(forms.ModelForm):
-    post_text = forms.CharField(widget=forms.Textarea({'rows': 2, 'placeholder': 'What\'s on your mind?'}))
+    post_text = forms.CharField(widget=forms.Textarea(
+            {'rows': 2,
+             'placeholder': 'What\'s on your mind?'}
+    ))
 
     class Meta:
         model = Post
@@ -67,27 +70,4 @@ class PostCreationForm(forms.ModelForm):
             post.save()
         return post
 
-
-class FriendRequestForm(forms.ModelForm):
-    class Meta:
-        model = FriendRequest
-        fields = ()
-
-    def save(self, commit=True):
-        friend_request = super(FriendRequestForm, self).save(commit=False)
-        friend_request.sender = self.cleaned_data['sender']
-        friend_request.receiver = self.cleaned_data['receiver']
-
-        if commit:
-            friend_request.save()
-        return friend_request
-
-
-class FriendRequestResponseForm(forms.ModelForm):
-    class Meta:
-        model = TemuUser
-        fields = ()
-
-    def save(self, commit=True):
-        f_req_response = super(FriendRequestResponseForm, self).save(commit=False)
 
