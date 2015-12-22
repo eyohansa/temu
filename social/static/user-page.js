@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    autosize(document.querySelectorAll('textarea'));
+
     $('.commends').click(function() {
         var postId = $(this).attr("data-postid");
         $.get('/commend/', {post_id: postId}, function(data) {

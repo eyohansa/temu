@@ -5,6 +5,7 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block scripts %}
+    <script src="{% static "autosize.min.js" %}"></script>
     <script src="{% static "user-page.js" %}"></script>
 {% endblock %}
 
@@ -44,6 +45,7 @@
 
                         {% if page_user != user %}
                             <button id="add-friend-button" data-userid="{{ page_user.id }}">Add</button>
+                            <button id="block-button" data-csrftoken="{{ csrf_token }}" data-url="{% url 'social:block-user' request.user.username %}" data-username="{{ page_user.username }}">Block</button>
                         {% endif %}
                     </div>
                 {% endif %}
@@ -63,7 +65,7 @@
                 {% endif %}
 
                 {% if posts %}
-                    <div>
+                    <div id="posts">
                         {% for post in posts %}
                             {% if post.parent  %}
                             <div>
@@ -114,7 +116,7 @@
                                 </div>
                                 <div class="post-comments">
                                     <div id="{{ post.id }}-comment" class="comment-input container">
-                                        <input id="{{ post.id }}-comment-input" type="textarea" row="1"/> <br />
+                                        <textarea id="{{ post.id }}-comment-input" row="2"></textarea>
                                         <input class="comment-submit" type="button" value="Post" data-postid="{{ post.id }}" data-csrftoken="{{ csrf_token }}"/>
                                     </div>
                                     <div id="{{ post.id }}-comments">
