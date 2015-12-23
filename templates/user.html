@@ -40,16 +40,16 @@
                 {% if page_user %}
                     <div id="profile">
                         <div>
-                        {{ page_user.display_name }}
+                            <h3>{{ page_user.display_name }}<br/><small>{{ page_user.username }}</small></h3>
                         </div>
 
                         {% if page_user != user %}
                             <div class="btn-group" role="group" aria-label="actions">
                                 <button type='button' class="friend-add-button btn btn-default" data-userid="{{ page_user.id }}">
-
+                                    <span class="glyphicon glyphicon-plus" aria-hidden=true></span> Add
                                 </button>
                                 <button type='button' class="block-button btn btn-default" data-url="{% url 'social:block-user' request.user.username %}" data-username="{{ page_user.username }}">
-                                    Block
+                                    <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Block
                                 </button>
                             </div>
                         {% endif %}
