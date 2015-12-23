@@ -16,6 +16,6 @@ urlpatterns = [
     url(r'^(?P<username>\w+)/cancel/$', views.cancel, name="cancel-friend-request"),
     url(r'^(?P<username>\w+)/$', views.UserView.as_view(), name="user-page"),
     url(r'^(?P<username>\w+)/people/$', views.PeopleView.as_view(), name='people'),
-    url(r'^(?P<username>\w+)/people/block$', views.PeopleView.as_view(), name='block-list'),
+    url(r'^(?P<username>\w+)/people/block$', views.BlockListView.as_view(), name='block-list'),
     url(r'^(?P<username>\w+)/(?P<post_id>[0-9]+)/$', views.PostView.as_view(), name="post-detail"),
 ]

@@ -11,19 +11,23 @@ $(document).ready(function() {
 
     $('.comment-submit').click(function() {
         var postId = $(this).attr("data-postid");
-        var csrfToken = $(this).attr("data-csrftoken");
         var commentText = $('#' + postId + '-comment-input').val();
         var url = "/comment/";
 
         $.ajax(url, {
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader('X-CSRFToken', Cookies.get('csrftoken'));
+                }
+            },
             data: {
-                csrfmiddlewaretoken: csrfToken,
                 post_id: postId,
                 comment_text: commentText
             },
             type: 'POST',
             success: function(data) {
-                $('#'+postId+'comments').html(data);
+                console.table(data);
+                $('#' + postId + '-comments').html(data);
             },
             error: function(data) {
                 console.log(data)
@@ -31,14 +35,17 @@ $(document).ready(function() {
         });
     });
 
-    $('#add-friend-button').click(function() {
-        var userId = $(this).attr("data-userid");
-        var csrfToken = $(this).attr("data-csrftoken");
-        var url = "/friend/add/";
+    $('.add-friend-button').click(function() {
+        var username = $(this).attr("data-username");
+        var url = $(this).attr("data-href");
 
         $.ajax(url, {
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader('X-CSRFToken', Cookies.get('csrftoken'));
+                }
+            },
             data: {
-                csrfmiddlewaretoken: csrfToken,
                 user_id: userId
             },
             type: 'POST',
@@ -51,14 +58,17 @@ $(document).ready(function() {
         });
     });
 
-    $('#block-button').click(function() {
+    $('.block-button').click(function() {
         var username = $(this).attr('data-username');
-        var csrfToken = $(this).attr("data-csrftoken");
         var url = $(this).attr('data-url');
 
         $.ajax(url, {
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader('X-CSRFToken', Cookies.get('csrftoken'));
+                }
+            },
             data: {
-                csrfmiddlewaretoken: csrfToken,
                 target_username: username
             },
             type: 'POST',
@@ -73,3 +83,7 @@ $(document).ready(function() {
         })
     });
 });
+
+function csrfSafeMethod(method) {
+    return (/^(GET|HED|OPTIONS|TRACE)$/.test(method));
+}

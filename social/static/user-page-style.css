@@ -35,12 +35,20 @@
 }
 
 .person {
-    border: 1px solid black;
     margin: 8px 0px;
     padding: 8px;
 }
 
-.vertical-align {
-    display: flex;
-    align-items: center;
+.friend-add-button, .friend-add-button:active, .block-button, .block-button:active {
+    color: white;
+    background-color: forestgreen;
+}
+
+.friend-add-button:hover, .block-button:hover {
+    color: white;
+    background-color: darkgreen;
+}
+
+.friend-add-button:hover {
+    cursor: pointer;
 }

@@ -44,8 +44,14 @@
                         </div>
 
                         {% if page_user != user %}
-                            <button id="add-friend-button" data-userid="{{ page_user.id }}">Add</button>
-                            <button id="block-button" data-csrftoken="{{ csrf_token }}" data-url="{% url 'social:block-user' request.user.username %}" data-username="{{ page_user.username }}">Block</button>
+                            <div class="btn-group" role="group" aria-label="actions">
+                                <button type='button' class="friend-add-button btn btn-default" data-userid="{{ page_user.id }}">
+
+                                </button>
+                                <button type='button' class="block-button btn btn-default" data-url="{% url 'social:block-user' request.user.username %}" data-username="{{ page_user.username }}">
+                                    Block
+                                </button>
+                            </div>
                         {% endif %}
                     </div>
                 {% endif %}

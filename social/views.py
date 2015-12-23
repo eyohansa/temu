@@ -1,6 +1,6 @@
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
-from django.template import RequestContext
-from django.views.generic import CreateView, TemplateView, FormView, RedirectView, DetailView
+from django.template import RequestContext, loader
+from django.views.generic import CreateView, TemplateView, FormView, RedirectView, DetailView, ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -180,6 +180,15 @@ class PeopleView(TemplateView):
         )
 
 
+class BlockListView(ListView):
+
+    template_name = 'people.html'
+    context_object_name = 'blocked_user_list'
+
+    def get_queryset(self):
+        return Relationship.objects.get(user=self.request.user).blocked.all()
+
+
 @login_required
 def add_friend(request, username):
     user_id = request.kwargs['user_id']
@@ -227,7 +236,8 @@ def comment(request):
                 )
                 comments = Comment.objects.filter(post=post)
 
-    return HttpResponse(comments)
+    context = {'comments': comments}
+    return render(request, 'comments.html', context)
 
 
 @login_required

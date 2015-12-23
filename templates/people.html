@@ -11,11 +11,35 @@
         <div class="people">
             <div class="container-fluid">
                 {% for person in people %}
-                    <div class="person" class="row vertical-align">
+                    <div class="person row">
                         <a href="{% url "social:user-page" person.username %}">{{ person.display_name }}</a>
-                        <button class="friend-add-button pull-right" aria-label="Send Friend Request">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        </button>
+
+                        <div class="btn-group pull-right" role="group" aria-label="actions">
+                            <button type='button' class="friend-add-button btn btn-default" aria-label="Send Friend Request" data-href="{% url "social:send-friend-request" user.username %}" data-username="{{ person.username }}" {% if person in user.relationship.friends %}disabled{% endif %}>
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+                            </button>
+                            <button type='button' class="block-button btn btn-default" aria-label="Block Person" data-href="{% url 'social:block-user' user.username %}" data-username="{{ person.username }}">
+                                <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Block
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if blocked_user_list %}
+        <div class="blocked-user-list">
+            <div class="container-fluid">
+                {% for person in blocked_user_list %}
+                    <div class="person row">
+                        <a href="{% url "social:user-page" person.username %}">{{ person.display_name }}</a>
+
+                        <div class="btn-group pull-right" role="group" aria-label="actions">
+                            <button type='button' class="unblock-button btn btn-default" aria-label="Send Friend Request" data-href="{% url "social:send-friend-request" user.username %}" data-username="{{ person.username }}" {% if person in user.relationship.friends %}disabled{% endif %}>
+                                <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Unblock
+                            </button>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
@@ -40,5 +64,7 @@
         {% endfor %}
         </div>
     {% endif %}
+
+    <a href="{% url "social:block-list" user.username %}">Blocked</a>
 </div>
 {% endblock %}

@@ -1,0 +1,39 @@
+{% load staticfiles %}
+
+{% if comments %}
+    {% for comment in comments %}
+        <div class="comment">
+            <div class="comment-header">
+                <span class="comment-header-author">
+                {% if user.username == comment.author.username %}
+                    You
+                {% else %}
+                    {{ comment.author.display_name }}
+                {% endif %}
+                </span>
+                <span class="comment-header-timestamp">
+                    {{ comment.post_time }}
+                </span>
+            </div>
+            <div class="comment-text">{{ comment.post_text }}</div>
+            <div class="comment-footer">
+                <div id="{{ comment.id }}-commendations" class="commendations">
+                    <span id="{{ comment.id }}-commendation-count">{{ comment.commendations.count }}</span>
+                    {% if comment.commendations.count > 1%}
+                        users likes
+                    {% else %}
+                        user like
+                    {% endif %}
+                    this post.
+                </div>
+                {%  if not user in comment.commendations.all %}
+                    <span id="{{ comment.id }}-commends" class="commends" data-postid="{{ comment.id }}">
+                        Commend
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <span>Failed to retrieve comments.</span>
+{% endif %}
