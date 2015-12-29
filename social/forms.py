@@ -20,7 +20,7 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = TemuUser
-        fields = ("username",)
+        fields = ("username", "email")
 
     def clean_password_confirm(self):
         password = self.cleaned_data.get('password')

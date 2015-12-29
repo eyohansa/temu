@@ -9,19 +9,21 @@ logger = logging.getLogger(__name__)
 
 # Create your models here.
 class TemuUserManager(BaseUserManager):
-    def create_user(self, username, join_date, password):
+    def create_user(self, username, join_date, email, password):
         new_user = self.model(
             username=username,
-            join_date=join_date
+            join_date=join_date,
+            email=email
         )
         new_user.set_password(password)
         new_user.save(using=self._db)
         logger.info("New user is saved.")
         return new_user
 
-    def create_superuser(self, username, join_date, password):
+    def create_superuser(self, username, join_date, email, password):
         new_superuser = self.model(
             username=username,
+            email=email,
             is_active=True,
             is_superuser=True,
             join_date=join_date
@@ -35,6 +37,7 @@ class TemuUserManager(BaseUserManager):
 class TemuUser(AbstractBaseUser):
     username = models.CharField(max_length=20, unique=True)
     display_name = models.CharField(max_length=30)
+    email = models.EmailField(default="user@example.com")
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     join_date = models.DateField('date joined')
